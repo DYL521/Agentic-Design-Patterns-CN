@@ -1,133 +1,213 @@
 # Chapter 7: Multi-Agent Collaboration
+# 第7章：多智能体协作
 
-While a monolithic agent architecture can be effective for well-defined problems, its capabilities are often constrained when faced with complex, multi-domain tasks. The Multi-Agent Collaboration pattern addresses these limitations by structuring a system as a cooperative ensemble of distinct, specialized agents. This approach is predicated on the principle of task decomposition, where a high-level objective is broken down into discrete sub-problems. Each sub-problem is then assigned to an agent possessing the specific tools, data access, or reasoning capabilities best suited for that task.
+While a monolithic agent architecture can be effective for well-defined problems, its capabilities are often constrained when faced with complex, multi-domain tasks.
+虽然单体智能体架构对于明确定义的问题可能很有效，但在面对复杂的多领域任务时，其能力往往受到限制。
+
+The Multi-Agent Collaboration pattern addresses these limitations by structuring a system as a cooperative ensemble of distinct, specialized agents. This approach is predicated on the principle of task decomposition, where a high-level objective is broken down into discrete sub-problems. Each sub-problem is then assigned to an agent possessing the specific tools, data access, or reasoning capabilities best suited for that task.
+多智能体协作模式通过将系统构建为不同专业智能体的协作集合来解决这些限制。这种方法基于任务分解的原则，将高级目标分解为离散的子问题。然后每个子问题被分配给具有最适合该任务的特定工具、数据访问或推理能力的智能体。
 
 For example, a complex research query might be decomposed and assigned to a Research Agent for information retrieval, a Data Analysis Agent for statistical processing, and a Synthesis Agent for generating the final report. The efficacy of such a system is not merely due to the division of labor but is critically dependent on the mechanisms for inter-agent communication. This requires a standardized communication protocol and a shared ontology, allowing agents to exchange data, delegate sub-tasks, and coordinate their actions to ensure the final output is coherent.
+例如，一个复杂的研究查询可能被分解并分配给研究智能体进行信息检索、数据分析智能体进行统计处理，以及综合智能体生成最终报告。这种系统的有效性不仅源于分工，还关键依赖于智能体间通信机制。这需要标准化的通信协议和共享本体，允许智能体交换数据、委托子任务并协调其行动，以确保最终输出的连贯性。
 
 This distributed architecture offers several advantages, including enhanced modularity, scalability, and robustness, as the failure of a single agent does not necessarily cause a total system failure. The collaboration allows for a synergistic outcome where the collective performance of the multi-agent system surpasses the potential capabilities of any single agent within the ensemble.
+这种分布式架构提供了几个优势，包括增强的模块化、可扩展性和鲁棒性，因为单个智能体的失败不一定会导致整个系统的失败。协作允许产生协同效应，其中多智能体系统的集体性能超越了集合中任何单个智能体的潜在能力。
 
 # Multi-Agent Collaboration Pattern Overview
+# 多智能体协作模式概述
 
-The Multi-Agent Collaboration pattern involves designing systems where multiple independent or semi-independent agents work together to achieve a common goal. Each agent typically has a defined role, specific goals aligned with the overall objective, and potentially access to different tools or knowledge bases. The power of this pattern lies in the interaction and synergy between these agents.
+The Multi-Agent Collaboration pattern involves designing systems where multiple independent or semi-independent agents work together to achieve a common goal.
+多智能体协作模式涉及设计多个独立或半独立的智能体协同工作以实现共同目标的系统。 Each agent typically has a defined role, specific goals aligned with the overall objective, and potentially access to different tools or knowledge bases. The power of this pattern lies in the interaction and synergy between these agents.
+每个智能体通常都有定义的角色、与总体目标一致的具体目标，以及可能访问不同工具或知识库。这种模式的力量在于这些智能体之间的交互和协同效应。
 
 Collaboration can take various forms:
+协作可以采取各种形式：
 
 * **Sequential Handoffs:** One agent completes a task and passes its output to another agent for the next step in a pipeline (similar to the Planning pattern, but explicitly involving different agents).  
+* **顺序交接：** 一个智能体完成任务并将其输出传递给另一个智能体进行管道中的下一步（类似于规划模式，但明确涉及不同的智能体）。
+
 * **Parallel Processing:** Multiple agents work on different parts of a problem simultaneously, and their results are later combined.  
+* **并行处理：** 多个智能体同时处理问题的不同部分，然后合并它们的结果。
+
 * **Debate and Consensus:** Multi-Agent Collaboration where Agents with varied perspectives and information sources engage in discussions to evaluate options, ultimately reaching a consensus or a more informed decision.  
+* **辩论和共识：** 多智能体协作，其中具有不同观点和信息源的智能体参与讨论以评估选项，最终达成共识或更明智的决策。
+
 * **Hierarchical Structures:** A manager agent might delegate tasks to worker agents dynamically based on their tool access or plugin capabilities and synthesize their results. Each agent can also handle relevant groups of tools, rather than a single agent handling all the tools.  
+* **层次结构：** 管理智能体可能根据工作智能体的工具访问或插件能力动态委托任务并综合它们的结果。每个智能体也可以处理相关的工具组，而不是单个智能体处理所有工具。
+
 * **Expert Teams:** Agents with specialized knowledge in different domains (e.g., a researcher, a writer, an editor) collaborate to produce a complex output.
+* **专家团队：** 具有不同领域专业知识的智能体（例如，研究员、作家、编辑）协作产生复杂的输出。
 
 * ### **Critic-Reviewer:** Agents create initial outputs such as plans, drafts, or answers. A second group of agents then critically assesses this output for adherence to policies, security, compliance, correctness, quality, and alignment with organizational objectives. The original creator or a final agent revises the output based on this feedback. This pattern is particularly effective for code generation, research writing, logic checking, and ensuring ethical alignment. The advantages of this approach include increased robustness, improved quality, and a reduced likelihood of hallucinations or errors.
+* ### **批评-审查者：** 智能体创建初始输出，如计划、草稿或答案。然后第二组智能体批判性地评估这些输出，检查是否符合政策、安全性、合规性、正确性、质量以及与组织目标的一致性。原始创建者或最终智能体根据此反馈修订输出。这种模式对于代码生成、研究写作、逻辑检查和确保伦理一致性特别有效。这种方法的优势包括增强的鲁棒性、改进的质量以及减少幻觉或错误的可能性。
 
 A multi-agent system (see Fig.1) fundamentally comprises the delineation of agent roles and responsibilities, the establishment of communication channels through which agents exchange information, and the formulation of a task flow or interaction protocol that directs their collaborative endeavors.
+多智能体系统（见图1）基本上包括智能体角色和职责的划分、智能体交换信息的通信渠道的建立，以及指导其协作努力的任务流或交互协议的制定。
 
 ![][image1]
 
 Fig.1: Example of multi-agent system
+图1：多智能体系统示例
 
-Frameworks such as Crew AI and Google ADK are engineered to facilitate this paradigm by providing structures for the specification of agents, tasks, and their interactive procedures. This approach is particularly effective for challenges necessitating a variety of specialized knowledge, encompassing multiple discrete phases, or leveraging the advantages of concurrent processing and the corroboration of information across agents.
+Frameworks such as Crew AI and Google ADK are engineered to facilitate this paradigm by providing structures for the specification of agents, tasks, and their interactive procedures.
+Crew AI 和 Google ADK 等框架被设计为通过提供智能体、任务及其交互过程的规范结构来促进这种范式。 This approach is particularly effective for challenges necessitating a variety of specialized knowledge, encompassing multiple discrete phases, or leveraging the advantages of concurrent processing and the corroboration of information across agents.
+这种方法对于需要各种专业知识、包含多个离散阶段或利用并发处理和跨智能体信息验证优势的挑战特别有效。
 
 # Practical Applications & Use Cases
+# 实际应用和用例
 
 Multi-Agent Collaboration is a powerful pattern applicable across numerous domains:
+多智能体协作是一个适用于众多领域的强大模式：
 
 * **Complex Research and Analysis:** A team of agents could collaborate on a research project. One agent might specialize in searching academic databases, another in summarizing findings, a third in identifying trends, and a fourth in synthesizing the information into a report. This mirrors how a human research team might operate.  
+* **复杂研究和分析：** 一组智能体可以协作进行研究项目。一个智能体可能专门搜索学术数据库，另一个专门总结发现，第三个识别趋势，第四个将信息综合成报告。这反映了人类研究团队可能如何运作。
+
 * **Software Development:** Imagine agents collaborating on building software. One agent could be a requirements analyst, another a code generator, a third a tester, and a fourth a documentation writer. They could pass outputs between each other to build and verify components.  
+* **软件开发：** 想象智能体协作构建软件。一个智能体可能是需求分析师，另一个是代码生成器，第三个是测试员，第四个是文档编写者。它们可以在彼此之间传递输出来构建和验证组件。
+
 * **Creative Content Generation:** Creating a marketing campaign could involve a market research agent, a copywriter agent, a graphic design agent (using image generation tools), and a social media scheduling agent, all working together.  
+* **创意内容生成：** 创建营销活动可能涉及市场研究智能体、文案智能体、平面设计智能体（使用图像生成工具）和社交媒体调度智能体，所有这些都协同工作。
+
 * **Financial Analysis:** A multi-agent system could analyze financial markets. Agents might specialize in fetching stock data, analyzing news sentiment, performing technical analysis, and generating investment recommendations.  
+* **金融分析：** 多智能体系统可以分析金融市场。智能体可能专门获取股票数据、分析新闻情绪、执行技术分析并生成投资建议。
+
 * **Customer Support Escalation:** A front-line support agent could handle initial queries, escalating complex issues to a specialist agent (e.g., a technical expert or a billing specialist) when needed, demonstrating a sequential handoff based on problem complexity.  
+* **客户支持升级：** 一线支持智能体可以处理初始查询，在需要时将复杂问题升级给专家智能体（例如，技术专家或计费专家），展示基于问题复杂性的顺序交接。
+
 * **Supply Chain Optimization:** Agents could represent different nodes in a supply chain (suppliers, manufacturers, distributors) and collaborate to optimize inventory levels, logistics, and scheduling in response to changing demand or disruptions.  
+* **供应链优化：** 智能体可以代表供应链中的不同节点（供应商、制造商、分销商）并协作优化库存水平、物流和调度，以应对不断变化的需求或中断。
+
 * **Network Analysis & Remediation**: Autonomous operations benefit greatly from an agentic architecture, particularly in failure pinpointing. Multiple agents can collaborate to triage and remediate issues, suggesting optimal actions. These agents can also integrate with traditional machine learning models and tooling, leveraging existing systems while simultaneously offering the advantages of Generative AI.
+* **网络分析和修复：** 自主操作从智能体架构中受益匪浅，特别是在故障定位方面。多个智能体可以协作进行分类和修复问题，建议最佳行动。这些智能体还可以与传统机器学习模型和工具集成，利用现有系统同时提供生成式人工智能的优势。
 
 The capacity to delineate specialized agents and meticulously orchestrate their interrelationships empowers developers to construct systems exhibiting enhanced modularity, scalability, and the ability to address complexities that would prove insurmountable for a singular, integrated agent. 
+划分专业智能体并精心编排它们相互关系的能力使开发者能够构建具有增强模块化、可扩展性和解决对单一集成智能体来说无法克服的复杂性的系统。
 
 # Multi-Agent Collaboration: Exploring Interrelationships and Communication Structures
+# 多智能体协作：探索相互关系和通信结构
 
-Understanding the intricate ways in which agents interact and communicate is fundamental to designing effective multi-agent systems. As depicted in Fig. 2, a spectrum of interrelationship and communication models exists, ranging from the simplest single-agent scenario to complex, custom-designed collaborative frameworks. Each model presents unique advantages and challenges, influencing the overall efficiency, robustness, and adaptability of the multi-agent system.
+Understanding the intricate ways in which agents interact and communicate is fundamental to designing effective multi-agent systems.
+理解智能体交互和通信的复杂方式对于设计有效的多智能体系统至关重要。
+
+As depicted in Fig. 2, a spectrum of interrelationship and communication models exists, ranging from the simplest single-agent scenario to complex, custom-designed collaborative frameworks. Each model presents unique advantages and challenges, influencing the overall efficiency, robustness, and adaptability of the multi-agent system.
+如图2所示，存在一系列相互关系和通信模型，从最简单的单智能体场景到复杂的定制协作框架。每个模型都呈现独特的优势和挑战，影响多智能体系统的整体效率、鲁棒性和适应性。
 
 **1\. Single Agent:** At the most basic level, a "Single Agent" operates autonomously without direct interaction or communication with other entities. While this model is straightforward to implement and manage, its capabilities are inherently limited by the individual agent's scope and resources. It is suitable for tasks that are decomposable into independent sub-problems, each solvable by a single, self-sufficient agent.
+**1. 单智能体：** 在最基本的层面上，"单智能体"自主运行，不与其他实体直接交互或通信。虽然这种模型实现和管理简单，但其能力本质上受到单个智能体范围和资源的限制。它适用于可分解为独立子问题的任务，每个子问题都可以由单个自给自足的智能体解决。
 
 **2\. Network:** The "Network" model represents a significant step towards collaboration, where multiple agents interact directly with each other in a decentralized fashion. Communication typically occurs peer-to-peer, allowing for the sharing of information, resources, and even tasks. This model fosters resilience, as the failure of one agent does not necessarily cripple the entire system. However, managing communication overhead and ensuring coherent decision-making in a large, unstructured network can be challenging.
+**2. 网络：** "网络"模型代表了朝向协作的重要一步，其中多个智能体以分散的方式直接相互交互。通信通常是点对点的，允许共享信息、资源甚至任务。这种模型培养了韧性，因为一个智能体的失败不一定会使整个系统瘫痪。然而，管理大型非结构化网络中的通信开销并确保连贯的决策制定可能具有挑战性。
 
 **3\. Supervisor:** In the "Supervisor" model, a dedicated agent, the "supervisor," oversees and coordinates the activities of a group of subordinate agents. The supervisor acts as a central hub for communication, task allocation, and conflict resolution. This hierarchical structure offers clear lines of authority and can simplify management and control. However, it introduces a single point of failure (the supervisor) and can become a bottleneck if the supervisor is overwhelmed by a large number of subordinates or complex tasks.
+**3. 监督者：** 在"监督者"模型中，一个专门的智能体（"监督者"）监督和协调一组下属智能体的活动。监督者充当通信、任务分配和冲突解决的中心枢纽。这种层次结构提供了明确的权限线，可以简化管理和控制。然而，它引入了单点故障（监督者），如果监督者被大量下属或复杂任务压垮，可能会成为瓶颈。
 
 **4\. Supervisor as a Tool:** This model is a nuanced extension of the "Supervisor" concept, where the supervisor's role is less about direct command and control and more about providing resources, guidance, or analytical support to other agents. The supervisor might offer tools, data, or computational services that enable other agents to perform their tasks more effectively, without necessarily dictating their every action. This approach aims to leverage the supervisor's capabilities without imposing rigid top-down control.
+**4. 作为工具的监督者：** 这个模型是"监督者"概念的细微扩展，其中监督者的角色不太关于直接命令和控制，而更多关于为其他智能体提供资源、指导或分析支持。监督者可能提供工具、数据或计算服务，使其他智能体能够更有效地执行任务，而不必指定它们的每个行动。这种方法旨在利用监督者的能力，而不施加严格的自上而下的控制。
 
 **5\. Hierarchical:** The "Hierarchical" model expands upon the supervisor concept to create a multi-layered organizational structure. This involves multiple levels of supervisors, with higher-level supervisors overseeing lower-level ones, and ultimately, a collection of operational agents at the lowest tier. This structure is well-suited for complex problems that can be decomposed into sub-problems, each managed by a specific layer of the hierarchy. It provides a structured approach to scalability and complexity management, allowing for distributed decision-making within defined boundaries.
+**5. 层次结构：** "层次结构"模型扩展了监督者概念，创建了多层组织结构。这涉及多个层级的监督者，高层监督者监督低层监督者，最终在最底层有一组操作智能体。这种结构非常适合可以分解为子问题的复杂问题，每个子问题由层次结构的特定层管理。它提供了一种结构化的方法来处理可扩展性和复杂性管理，允许在定义的边界内进行分布式决策。
 
 ![][image2]
 
 Fig. 2: Agents communicate and interact in various ways.
+图2：智能体以各种方式通信和交互。
 
 **6\. Custom:** The "Custom" model represents the ultimate flexibility in multi-agent system design. It allows for the creation of unique interrelationship and communication structures tailored precisely to the specific requirements of a given problem or application. This can involve hybrid approaches that combine elements from the previously mentioned models, or entirely novel designs that emerge from the unique constraints and opportunities of the environment. Custom models often arise from the need to optimize for specific performance metrics, handle highly dynamic environments, or incorporate domain-specific knowledge into the system's architecture. Designing and implementing custom models typically requires a deep understanding of multi-agent systems principles and careful consideration of communication protocols, coordination mechanisms, and emergent behaviors.
+**6. 定制：** "定制"模型代表了多智能体系统设计中的终极灵活性。它允许创建精确适应特定问题或应用需求的独特相互关系和通信结构。这可能涉及混合方法，结合前面提到的模型的元素，或者从环境的独特约束和机会中产生的全新设计。定制模型通常源于优化特定性能指标、处理高度动态环境或将领域特定知识纳入系统架构的需求。设计和实现定制模型通常需要深入理解多智能体系统原理，并仔细考虑通信协议、协调机制和涌现行为。
 
 In summary, the choice of interrelationship and communication model for a multi-agent system is a critical design decision. Each model offers distinct advantages and disadvantages, and the optimal choice depends on factors such as the complexity of the task, the number of agents, the desired level of autonomy, the need for robustness, and the acceptable communication overhead. Future advancements in multi-agent systems will likely continue to explore and refine these models, as well as develop new paradigms for collaborative intelligence.
+总之，多智能体系统的相互关系和通信模型的选择是一个关键的设计决策。每个模型都提供了独特的优势和劣势，最佳选择取决于诸如任务复杂性、智能体数量、期望的自主性水平、鲁棒性需求以及可接受的通信开销等因素。多智能体系统的未来进展可能会继续探索和完善这些模型，并开发新的协作智能范式。
 
 # Hands-On code (Crew AI)
+# 实践代码（Crew AI）
 
 This Python code defines an AI-powered crew using the CrewAI framework to generate a blog post about AI trends. It starts by setting up the environment, loading API keys from a .env file. The core of the application involves defining two agents: a researcher to find and summarize AI trends, and a writer to create a blog post based on the research. 
+这个Python代码使用CrewAI框架定义了一个由AI驱动的团队来生成关于AI趋势的博客文章。它首先通过从.env文件加载API密钥来设置环境。应用程序的核心涉及定义两个智能体：一个研究者用于查找和总结AI趋势，一个作者基于研究创建博客文章。
 
 Two tasks are defined accordingly: one for researching the trends and another for writing the blog post, with the writing task depending on the output of the research task. These agents and tasks are then assembled into a Crew, specifying a sequential process where tasks are executed in order. The Crew is initialized with the agents, tasks, and a language model (specifically the "gemini-2.0-flash" model). The main function executes this crew using the kickoff() method, orchestrating the collaboration between the agents to produce the desired output. Finally, the code prints the final result of the crew's execution, which is the generated blog post.
+相应地定义了两个任务：一个用于研究趋势，另一个用于撰写博客文章，其中写作任务依赖于研究任务的输出。然后将这些智能体和任务组装成一个Crew，指定一个按顺序执行任务的顺序过程。Crew使用智能体、任务和语言模型（具体是"gemini-2.0-flash"模型）进行初始化。main函数使用kickoff()方法执行这个crew，编排智能体之间的协作以产生所需的输出。最后，代码打印crew执行的最终结果，即生成的博客文章。
 
 | `import os from dotenv import load_dotenv from crewai import Agent, Task, Crew, Process from langchain_google_genai import ChatGoogleGenerativeAI def setup_environment():    """Loads environment variables and checks for the required API key."""    load_dotenv()    if not os.getenv("GOOGLE_API_KEY"):        raise ValueError("GOOGLE_API_KEY not found. Please set it in your .env file.") def main():    """    Initializes and runs the AI crew for content creation using the latest Gemini model.    """    setup_environment()    # Define the language model to use.    # Updated to a model from the Gemini 2.0 series for better performance and features.    # For cutting-edge (preview) capabilities, you could use "gemini-2.5-flash".    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")    # Define Agents with specific roles and goals    researcher = Agent(        role='Senior Research Analyst',        goal='Find and summarize the latest trends in AI.',        backstory="You are an experienced research analyst with a knack for identifying key trends and synthesizing information.",        verbose=True,        allow_delegation=False,    )    writer = Agent(        role='Technical Content Writer',        goal='Write a clear and engaging blog post based on research findings.',        backstory="You are a skilled writer who can translate complex technical topics into accessible content.",        verbose=True,        allow_delegation=False,    )    # Define Tasks for the agents    research_task = Task(        description="Research the top 3 emerging trends in Artificial Intelligence in 2024-2025. Focus on practical applications and potential impact.",        expected_output="A detailed summary of the top 3 AI trends, including key points and sources.",        agent=researcher,    )    writing_task = Task(        description="Write a 500-word blog post based on the research findings. The post should be engaging and easy for a general audience to understand.",        expected_output="A complete 500-word blog post about the latest AI trends.",        agent=writer,        context=[research_task],    )    # Create the Crew    blog_creation_crew = Crew(        agents=[researcher, writer],        tasks=[research_task, writing_task],        process=Process.sequential,        llm=llm,        verbose=2 # Set verbosity for detailed crew execution logs    )    # Execute the Crew    print("## Running the blog creation crew with Gemini 2.0 Flash... ##")    try:        result = blog_creation_crew.kickoff()        print("\n------------------\n")        print("## Crew Final Output ##")        print(result)    except Exception as e:        print(f"\nAn unexpected error occurred: {e}") if __name__ == "__main__":    main()` |
 | :---- |
 
 We will now delve into further examples within the Google ADK framework, with particular emphasis on hierarchical, parallel, and sequential coordination paradigms, alongside the implementation of an agent as an operational instrument.
+现在我们将深入研究Google ADK框架中的更多示例，特别强调层次、并行和顺序协调范式，以及将智能体作为操作工具的实现。
 
 # Hands-on Code (Google ADK)
+# 实践代码（Google ADK）
 
 The following code example demonstrates the establishment of a hierarchical agent structure within the Google ADK through the creation of a parent-child relationship. The code defines two types of agents: LlmAgent and a custom TaskExecutor agent derived from BaseAgent. The TaskExecutor is designed for specific, non-LLM tasks and in this example, it simply yields a "Task finished successfully" event. An LlmAgent named greeter is initialized with a specified model and instruction to act as a friendly greeter. The custom TaskExecutor is instantiated as task\_doer. A parent LlmAgent called coordinator is created, also with a model and instructions. The coordinator's instructions guide it to delegate greetings to the greeter and task execution to the task\_doer. The greeter and task\_doer are added as sub-agents to the coordinator, establishing a parent-child relationship. The code then asserts that this relationship is correctly set up. Finally, it prints a message indicating that the agent hierarchy has been successfully created.
+以下代码示例通过创建父子关系演示了在Google ADK中建立层次智能体结构。代码定义了两种类型的智能体：LlmAgent和从BaseAgent派生的自定义TaskExecutor智能体。TaskExecutor专门用于特定的非LLM任务，在本例中，它只是生成一个"任务成功完成"事件。一个名为greeter的LlmAgent使用指定的模型和指令初始化，作为友好的问候者。自定义TaskExecutor被实例化为task_doer。创建了一个名为coordinator的父LlmAgent，同样带有模型和指令。coordinator的指令指导它将问候委托给greeter，将任务执行委托给task_doer。greeter和task_doer作为子智能体添加到coordinator，建立父子关系。然后代码断言这种关系已正确设置。最后，它打印一条消息，表明智能体层次结构已成功创建。
 
 | `from google.adk.agents import LlmAgent, BaseAgent from google.adk.agents.invocation_context import InvocationContext from google.adk.events import Event from typing import AsyncGenerator # Correctly implement a custom agent by extending BaseAgent class TaskExecutor(BaseAgent):    """A specialized agent with custom, non-LLM behavior."""    name: str = "TaskExecutor"    description: str = "Executes a predefined task."    async def _run_async_impl(self, context: InvocationContext) -> AsyncGenerator[Event, None]:        """Custom implementation logic for the task."""        # This is where your custom logic would go.        # For this example, we'll just yield a simple event.        yield Event(author=self.name, content="Task finished successfully.") # Define individual agents with proper initialization # LlmAgent requires a model to be specified. greeter = LlmAgent(    name="Greeter",    model="gemini-2.0-flash-exp",    instruction="You are a friendly greeter." ) task_doer = TaskExecutor() # Instantiate our concrete custom agent # Create a parent agent and assign its sub-agents # The parent agent's description and instructions should guide its delegation logic. coordinator = LlmAgent(    name="Coordinator",    model="gemini-2.0-flash-exp",    description="A coordinator that can greet users and execute tasks.",    instruction="When asked to greet, delegate to the Greeter. When asked to perform a task, delegate to the TaskExecutor.",    sub_agents=[        greeter,        task_doer    ] ) # The ADK framework automatically establishes the parent-child relationships. # These assertions will pass if checked after initialization. assert greeter.parent_agent == coordinator assert task_doer.parent_agent == coordinator print("Agent hierarchy created successfully.")` |
 | :---- |
 
 This code excerpt illustrates the employment of the LoopAgent within the Google ADK framework to establish iterative workflows. The code defines two agents: ConditionChecker and ProcessingStep. ConditionChecker is a custom agent that checks a "status" value in the session state. If the "status" is "completed", ConditionChecker escalates an event to stop the loop. Otherwise, it yields an event to continue the loop. ProcessingStep is an LlmAgent using the "gemini-2.0-flash-exp" model. Its instruction is to perform a task and set the session "status" to "completed" if it's the final step. A LoopAgent named StatusPoller is created. StatusPoller is configured with max\_iterations=10. StatusPoller includes both ProcessingStep and an instance of ConditionChecker as sub-agents. The LoopAgent will execute the sub-agents sequentially for up to 10 iterations, stopping if ConditionChecker finds the status is "completed".
+这段代码展示了在Google ADK框架中使用LoopAgent建立迭代工作流。代码定义了两个智能体：ConditionChecker和ProcessingStep。ConditionChecker是一个自定义智能体，用于检查会话状态中的"status"值。如果"status"是"completed"，ConditionChecker升级一个事件来停止循环。否则，它生成一个事件来继续循环。ProcessingStep是一个使用"gemini-2.0-flash-exp"模型的LlmAgent。它的指令是执行任务，如果是最后一步，则将会话"status"设置为"completed"。创建了一个名为StatusPoller的LoopAgent。StatusPoller配置了max_iterations=10。StatusPoller包含ProcessingStep和ConditionChecker的实例作为子智能体。LoopAgent将顺序执行子智能体最多10次迭代，如果ConditionChecker发现状态为"completed"则停止。
 
 | i`mport asyncio from typing import AsyncGenerator from google.adk.agents import LoopAgent, LlmAgent, BaseAgent from google.adk.events import Event, EventActions from google.adk.agents.invocation_context import InvocationContext # Best Practice: Define custom agents as complete, self-describing classes. class ConditionChecker(BaseAgent):    """A custom agent that checks for a 'completed' status in the session state."""    name: str = "ConditionChecker"    description: str = "Checks if a process is complete and signals the loop to stop."    async def _run_async_impl(        self, context: InvocationContext    ) -> AsyncGenerator[Event, None]:        """Checks state and yields an event to either continue or stop the loop."""        status = context.session.state.get("status", "pending")        is_done = (status == "completed")        if is_done:            # Escalate to terminate the loop when the condition is met.            yield Event(author=self.name, actions=EventActions(escalate=True))        else:            # Yield a simple event to continue the loop.            yield Event(author=self.name, content="Condition not met, continuing loop.") # Correction: The LlmAgent must have a model and clear instructions. process_step = LlmAgent(    name="ProcessingStep",    model="gemini-2.0-flash-exp",    instruction="You are a step in a longer process. Perform your task. If you are the final step, update session state by setting 'status' to 'completed'." ) # The LoopAgent orchestrates the workflow. poller = LoopAgent(    name="StatusPoller",    max_iterations=10,    sub_agents=[        process_step,        ConditionChecker() # Instantiating the well-defined custom agent.    ] ) # This poller will now execute 'process_step'  # and then 'ConditionChecker' # repeatedly until the status is 'completed' or 10 iterations  # have passed.` |
 | :---- |
 
-This code excerpt elucidates the SequentialAgent pattern within the Google ADK, engineered for the construction of linear workflows. This code defines a sequential agent pipeline using the google.adk.agents library. The pipeline consists of two agents, step1 and step2. step1 is named "Step1\_Fetch" and its output will be stored in the session state under the key "data". step2 is named "Step2\_Process" and is instructed to analyze the information stored in session.state\["data"\] and provide a summary. The SequentialAgent named "MyPipeline" orchestrates the execution of these sub-agents. When the pipeline is run with an initial input, step1 will execute first. The response from step1 will be saved into the session state under the key "data". Subsequently, step2 will execute, utilizing the information that step1 placed into the state as per its instruction. This structure allows for building workflows where the output of one agent becomes the input for the next. This is a common pattern in creating multi-step AI or data processing pipelines. 
+This code excerpt elucidates the SequentialAgent pattern within the Google ADK, engineered for the construction of linear workflows. This code defines a sequential agent pipeline using the google.adk.agents library. The pipeline consists of two agents, step1 and step2. step1 is named "Step1\_Fetch" and its output will be stored in the session state under the key "data". step2 is named "Step2\_Process" and is instructed to analyze the information stored in session.state\["data"\] and provide a summary. The SequentialAgent named "MyPipeline" orchestrates the execution of these sub-agents. When the pipeline is run with an initial input, step1 will execute first. The response from step1 will be saved into the session state under the key "data". Subsequently, step2 will execute, utilizing the information that step1 placed into the state as per its instruction. This structure allows for building workflows where the output of one agent becomes the input for the next. This is a common pattern in creating multi-step AI or data processing pipelines.
+这段代码阐明了Google ADK中的SequentialAgent模式，该模式专门用于构建线性工作流。这段代码使用google.adk.agents库定义了一个顺序智能体管道。管道由两个智能体组成，step1和step2。step1命名为"Step1_Fetch"，其输出将存储在会话状态中的"data"键下。step2命名为"Step2_Process"，其指令是分析存储在session.state["data"]中的信息并提供摘要。名为"MyPipeline"的SequentialAgent编排这些子智能体的执行。当管道以初始输入运行时，step1将首先执行。来自step1的响应将保存到会话状态中的"data"键下。随后，step2将执行，根据其指令使用step1放入状态的信息。这种结构允许构建工作流，其中一个智能体的输出成为下一个智能体的输入。这是创建多步骤AI或数据处理管道的常见模式。 
 
 | `from google.adk.agents import SequentialAgent, Agent # This agent's output will be saved to session.state["data"] step1 = Agent(name="Step1_Fetch", output_key="data") # This agent will use the data from the previous step. # We instruct it on how to find and use this data. step2 = Agent(    name="Step2_Process",    instruction="Analyze the information found in state['data'] and provide a summary." ) pipeline = SequentialAgent(    name="MyPipeline",    sub_agents=[step1, step2] ) # When the pipeline is run with an initial input, Step1 will execute, # its response will be stored in session.state["data"], and then # Step2 will execute, using the information from the state as instructed.` |
 | :---- |
 
 The following code example illustrates the ParallelAgent pattern within the Google ADK, which facilitates the concurrent execution of multiple agent tasks. The data\_gatherer is designed to run two sub-agents concurrently: weather\_fetcher and news\_fetcher. The weather\_fetcher agent is instructed to get the weather for a given location and store the result in session.state\["weather\_data"\]. Similarly, the news\_fetcher agent is instructed to retrieve the top news story for a given topic and store it in session.state\["news\_data"\]. Each sub-agent is configured to use the "gemini-2.0-flash-exp" model. The ParallelAgent orchestrates the execution of these sub-agents, allowing them to work in parallel. The results from both weather\_fetcher and news\_fetcher would be gathered and stored in the session state. Finally, the example shows how to access the collected weather and news data from the final\_state after the agent's execution is complete.
+以下代码示例说明了Google ADK中的ParallelAgent模式，该模式促进了多个智能体任务的并发执行。data_gatherer被设计为同时运行两个子智能体：weather_fetcher和news_fetcher。weather_fetcher智能体被指示获取给定位置的天气并将结果存储在session.state["weather_data"]中。类似地，news_fetcher智能体被指示检索给定主题的头条新闻并将其存储在session.state["news_data"]中。每个子智能体都配置为使用"gemini-2.0-flash-exp"模型。ParallelAgent编排这些子智能体的执行，允许它们并行工作。来自weather_fetcher和news_fetcher的结果都会被收集并存储在会话状态中。最后，示例展示了如何在智能体执行完成后从final_state访问收集的天气和新闻数据。
 
 | `from google.adk.agents import Agent, ParallelAgent # It's better to define the fetching logic as tools for the agents # For simplicity in this example, we'll embed the logic in the agent's instruction. # In a real-world scenario, you would use tools. # Define the individual agents that will run in parallel weather_fetcher = Agent(    name="weather_fetcher",    model="gemini-2.0-flash-exp",    instruction="Fetch the weather for the given location and return only the weather report.",    output_key="weather_data"  # The result will be stored in session.state["weather_data"] ) news_fetcher = Agent(    name="news_fetcher",    model="gemini-2.0-flash-exp",    instruction="Fetch the top news story for the given topic and return only that story.",    output_key="news_data"      # The result will be stored in session.state["news_data"] ) # Create the ParallelAgent to orchestrate the sub-agents data_gatherer = ParallelAgent(    name="data_gatherer",    sub_agents=[        weather_fetcher,        news_fetcher    ] )` |
 | :---- |
 
 The provided code segment exemplifies the "Agent as a Tool" paradigm within the Google ADK, enabling an agent to utilize the capabilities of another agent in a manner analogous to function invocation. Specifically, the code defines an image generation system using Google's LlmAgent and AgentTool classes. It consists of two agents: a parent artist\_agent and a sub-agent image\_generator\_agent. The generate\_image function is a simple tool that simulates image creation, returning mock image data. The image\_generator\_agent is responsible for using this tool based on a text prompt it receives. The artist\_agent's role is to first invent a creative image prompt. It then calls the image\_generator\_agent through an AgentTool wrapper. The AgentTool acts as a bridge, allowing one agent to use another agent as a tool. When the artist\_agent calls the image\_tool, the AgentTool invokes the image\_generator\_agent with the artist's invented prompt. The image\_generator\_agent then uses the generate\_image function with that prompt. Finally, the generated image (or mock data) is returned back up through the agents. This architecture demonstrates a layered agent system where a higher-level agent orchestrates a lower-level, specialized agent to perform a task.
+提供的代码段示例了Google ADK中的"智能体作为工具"范式，使一个智能体能够以类似于函数调用的方式利用另一个智能体的能力。具体来说，代码使用Google的LlmAgent和AgentTool类定义了一个图像生成系统。它由两个智能体组成：父智能体artist_agent和子智能体image_generator_agent。generate_image函数是一个简单的工具，模拟图像创建，返回模拟图像数据。image_generator_agent负责根据接收到的文本提示使用这个工具。artist_agent的角色是首先创造一个创意图像提示。然后它通过AgentTool包装器调用image_generator_agent。AgentTool充当桥梁，允许一个智能体将另一个智能体用作工具。当artist_agent调用image_tool时，AgentTool使用艺术家发明的提示调用image_generator_agent。然后image_generator_agent使用该提示调用generate_image函数。最后，生成的图像（或模拟数据）通过智能体返回。这种架构展示了一个分层智能体系统，其中高级智能体编排低级专业智能体执行任务。
 
 | ``from google.adk.agents import LlmAgent from google.adk.tools import agent_tool from google.genai import types # 1. A simple function tool for the core capability. # This follows the best practice of separating actions from reasoning. def generate_image(prompt: str) -> dict:    """    Generates an image based on a textual prompt.    Args:        prompt: A detailed description of the image to generate.    Returns:        A dictionary with the status and the generated image bytes.    """    print(f"TOOL: Generating image for prompt: '{prompt}'")    # In a real implementation, this would call an image generation API.    # For this example, we return mock image data.    mock_image_bytes = b"mock_image_data_for_a_cat_wearing_a_hat"    return {        "status": "success",        # The tool returns the raw bytes, the agent will handle the Part creation.        "image_bytes": mock_image_bytes,        "mime_type": "image/png"    } # 2. Refactor the ImageGeneratorAgent into an LlmAgent. # It now correctly uses the input passed to it. image_generator_agent = LlmAgent(    name="ImageGen",    model="gemini-2.0-flash",    description="Generates an image based on a detailed text prompt.",    instruction=(        "You are an image generation specialist. Your task is to take the user's request "        "and use the `generate_image` tool to create the image. "        "The user's entire request should be used as the 'prompt' argument for the tool. "        "After the tool returns the image bytes, you MUST output the image."    ),    tools=[generate_image] ) # 3. Wrap the corrected agent in an AgentTool. # The description here is what the parent agent sees. image_tool = agent_tool.AgentTool(    agent=image_generator_agent,    description="Use this tool to generate an image. The input should be a descriptive prompt of the desired image." ) # 4. The parent agent remains unchanged. Its logic was correct. artist_agent = LlmAgent(    name="Artist",    model="gemini-2.0-flash",    instruction=(        "You are a creative artist. First, invent a creative and descriptive prompt for an image. "        "Then, use the `ImageGen` tool to generate the image using your prompt."    ),    tools=[image_tool] )`` |
 | :---- |
 
 # At a Glance
+# 概览
 
 **What:** Complex problems often exceed the capabilities of a single, monolithic LLM-based agent. A solitary agent may lack the diverse, specialized skills or access to the specific tools needed to address all parts of a multifaceted task. This limitation creates a bottleneck, reducing the system's overall effectiveness and scalability. As a result, tackling sophisticated, multi-domain objectives becomes inefficient and can lead to incomplete or suboptimal outcomes.
+**是什么：** 复杂问题通常超出单个单体LLM智能体的能力范围。单个智能体可能缺乏解决多方面任务所有部分所需的多样化专业技能或特定工具访问权限。这种限制造成了瓶颈，降低了系统的整体效率和可扩展性。因此，处理复杂的多领域目标变得低效，可能导致不完整或次优的结果。
 
 **Why:** The Multi-Agent Collaboration pattern offers a standardized solution by creating a system of multiple, cooperating agents. A complex problem is broken down into smaller, more manageable sub-problems. Each sub-problem is then assigned to a specialized agent with the precise tools and capabilities required to solve it. These agents work together through defined communication protocols and interaction models like sequential handoffs, parallel workstreams, or hierarchical delegation. This agentic, distributed approach creates a synergistic effect, allowing the group to achieve outcomes that would be impossible for any single agent.
+**为什么：** 多智能体协作模式通过创建多个协作智能体的系统提供了标准化解决方案。复杂问题被分解为更小、更易管理的子问题。然后每个子问题被分配给具有解决它所需的精确工具和能力的专业智能体。这些智能体通过定义的通信协议和交互模型（如顺序交接、并行工作流或层次委托）一起工作。这种智能体的分布式方法创造了协同效应，使团队能够实现任何单个智能体都不可能实现的结果。
 
 **Rule of thumb:** Use this pattern when a task is too complex for a single agent and can be decomposed into distinct sub-tasks requiring specialized skills or tools. It is ideal for problems that benefit from diverse expertise, parallel processing, or a structured workflow with multiple stages, such as complex research and analysis, software development, or creative content generation.
+**经验法则：** 当任务对单个智能体来说太复杂，并且可以分解为需要专业技能或工具的不同子任务时，使用这种模式。它非常适合从多样化专业知识、并行处理或多阶段结构化工作流中受益的问题，如复杂的研究和分析、软件开发或创意内容生成。
 
 **Visual summary**
+**视觉总结**
 
 **![][image3]**
 
 Fig.3: Multi-Agent design pattern
+图3：多智能体设计模式
 
 # Key Takeaways
+# 关键要点
 
 * Multi-agent collaboration involves multiple agents working together to achieve a common goal.  
+* 多智能体协作涉及多个智能体一起工作以实现共同目标。
+
 * This pattern leverages specialized roles, distributed tasks, and inter-agent communication.  
+* 这种模式利用专业角色、分布式任务和智能体间通信。
 * Collaboration can take forms like sequential handoffs, parallel processing, debate, or hierarchical structures.  
+* 协作可以采取顺序交接、并行处理、辩论或层次结构等形式。
+
 * This pattern is ideal for complex problems requiring diverse expertise or multiple distinct stages.
+* 这种模式非常适合需要多样化专业知识或多个不同阶段的复杂问题。
 
 # Conclusion 
+# 结论
 
 This chapter explored the Multi-Agent Collaboration pattern, demonstrating the benefits of orchestrating multiple specialized agents within systems. We examined various collaboration models, emphasizing the pattern's essential role in addressing complex, multifaceted problems across diverse domains. Understanding agent collaboration naturally leads to an inquiry into their interactions with the external environment.
+本章探讨了多智能体协作模式，展示了在系统中编排多个专业智能体的好处。我们研究了各种协作模型，强调了该模式在解决跨领域复杂多面问题中的重要作用。理解智能体协作自然引导我们探究它们与外部环境的交互。
 
 # References
+# 参考文献
 
 1. Multi-Agent Collaboration Mechanisms: A Survey of LLMs, [https://arxiv.org/abs/2501.06322](https://arxiv.org/abs/2501.06322)   
 2. Multi-Agent System — The Power of Collaboration, [https://aravindakumar.medium.com/introducing-multi-agent-frameworks-the-power-of-collaboration-e9db31bba1b6](https://aravindakumar.medium.com/introducing-multi-agent-frameworks-the-power-of-collaboration-e9db31bba1b6) 
