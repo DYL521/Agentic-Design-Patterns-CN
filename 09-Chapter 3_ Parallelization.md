@@ -1,10 +1,16 @@
 # Chapter 3: Parallelization
+第三章：并行化
 
 # Parallelization Pattern Overview
+并行化模式概述
 
 In the previous chapters, we've explored Prompt Chaining for sequential workflows and Routing for dynamic decision-making and transitions between different paths. While these patterns are essential, many complex agentic tasks involve multiple sub-tasks that can be executed *simultaneously* rather than one after another. This is where the **Parallelization** pattern becomes crucial.
 
+在前面的章节中，我们探讨了用于顺序工作流的提示链（Prompt Chaining）和用于动态决策和不同路径间转换的路由（Routing）。虽然这些模式很重要，但许多复杂的代理任务涉及多个可以*同时*执行而非逐个执行的子任务。这就是**并行化（Parallelization）**模式变得至关重要的地方。
+
 Parallelization involves executing multiple components, such as LLM calls, tool usages, or even entire sub-agents, concurrently (see Fig.1). Instead of waiting for one step to complete before starting the next, parallel execution allows independent tasks to run at the same time, significantly reducing the overall execution time for tasks that can be broken down into independent parts.
+
+并行化涉及同时执行多个组件，如 LLM 调用、工具使用，甚至整个子代理（见图 1）。而不是等待一个步骤完成后再开始下一个，并行执行允许独立的任务同时运行，显著减少可分解为独立部分的任务的整体执行时间。
 
 Consider an agent designed to research a topic and summarize its findings. A sequential approach might:
 
@@ -20,9 +26,27 @@ A parallel approach could instead:
 2. Once both searches are complete, Summarize Source A *and* Summarize Source B simultaneously.  
 3. Synthesize a final answer from summaries A and B (this step is typically sequential, waiting for the parallel steps to finish).
 
+考虑一个用于研究主题并总结研究结果的代理。顺序方法可能是：
+
+1. 搜索源 A。
+2. 总结源 A。
+3. 搜索源 B。
+4. 总结源 B。
+5. 从摘要 A 和 B 中综合出最终答案。
+
+并行方法则可以是：
+
+1. 同时搜索源 A *和*源 B。
+2. 一旦两个搜索都完成，同时总结源 A *和*源 B。
+3. 从摘要 A 和 B 中综合出最终答案（这一步骤通常是顺序的，等待并行步骤完成）。
+
 The core idea is to identify parts of the workflow that do not depend on the output of other parts and execute them in parallel. This is particularly effective when dealing with external services (like APIs or databases) that have latency, as you can issue multiple requests concurrently.
 
 Implementing parallelization often requires frameworks that support asynchronous execution or multi-threading/multi-processing. Modern agentic frameworks are designed with asynchronous operations in mind, allowing you to easily define steps that can run in parallel.
+
+核心理念是识别工作流中不依赖其他部分输出的部分，并将它们并行执行。这在处理有延迟的外部服务（如 API 或数据库）时特别有效，因为您可以同时发出多个请求。
+
+实现并行化通常需要支持异步执行或多线程/多进程的框架。现代代理框架都考虑到了异步操作，允许您轻松定义可以并行运行的步骤。
 
 ![][image1]
 
@@ -30,11 +54,18 @@ Fig.1. Example of parallelization with sub-agents
 
 Frameworks like LangChain, LangGraph, and Google ADK provide mechanisms for parallel execution. In LangChain Expression Language (LCEL), you can achieve parallel execution by combining runnable objects using operators like | (for sequential) and by structuring your chains or graphs to have branches that execute concurrently. LangGraph, with its graph structure, allows you to define multiple nodes that can be executed from a single state transition, effectively enabling parallel branches in the workflow. Google ADK provides robust, native mechanisms to facilitate and manage the parallel execution of agents, significantly enhancing the efficiency and scalability of complex, multi-agent systems. This inherent capability within the ADK framework allows developers to design and implement solutions where multiple agents can operate concurrently, rather than sequentially.
 
+LangChain、LangGraph 和 Google ADK 等框架提供了并行执行机制。在 LangChain 表达式语言（LCEL）中，您可以通过使用像 | （用于顺序）这样的操作符组合可运行对象，以及通过构建具有并发执行分支的链或图来实现并行执行。LangGraph 凭借其图结构，允许您定义可从单个状态转换中执行的多个节点，有效地在工作流中启用并行分支。Google ADK 提供了健壮的原生机制来促进和管理代理的并行执行，显著提高了复杂多代理系统的效率和可扩展性。ADK 框架中的这种固有能力使开发人员能够设计和实现多个代理可以并发而非顺序操作的解决方案。
+
 The Parallelization pattern is vital for improving the efficiency and responsiveness of agentic systems, especially when dealing with tasks that involve multiple independent lookups, computations, or interactions with external services. It's a key technique for optimizing the performance of complex agent workflows.
 
+并行化模式对于提高代理系统的效率和响应能力至关重要，特别是在处理涉及多个独立查找、计算或与外部服务交互的任务时。这是优化复杂代理工作流性能的关键技术。
+
 # Practical Applications & Use Cases
+实际应用和用例
 
 Parallelization is a powerful pattern for optimizing agent performance across various applications:
+
+并行化是一种强大的模式，用于在各种应用中优化代理性能：
 
 1\. Information Gathering and Research:  
 Collecting information from multiple sources simultaneously is a classic use case.
@@ -43,12 +74,26 @@ Collecting information from multiple sources simultaneously is a classic use cas
   * **Parallel Tasks:** Search news articles, pull stock data, check social media mentions, and query a company database, all at the same time.  
   * **Benefit:** Gathers a comprehensive view much faster than sequential lookups.
 
+1. **信息收集和研究：**  
+同时从多个源收集信息是一个经典用例。
+
+* **用例：**研究公司的代理。  
+  * **并行任务：**同时搜索新闻文章、获取股票数据、检查社交媒体提及和查询公司数据库。  
+  * **好处：**比顺序查找更快地获取全面视图。
+
 2\. Data Processing and Analysis:  
 Applying different analysis techniques or processing different data segments concurrently.
 
 * **Use Case:** An agent analyzing customer feedback.  
   * **Parallel Tasks:** Run sentiment analysis, extract keywords, categorize feedback, and identify urgent issues simultaneously across a batch of feedback entries.  
   * **Benefit:** Provides a multi-faceted analysis quickly.
+
+2. **数据处理和分析：**  
+并发应用不同的分析技术或处理不同的数据段。
+
+* **用例：**分析客户反馈的代理。  
+  * **并行任务：**在一批反馈条目中同时运行情感分析、提取关键词、对反馈进行分类并识别紧急问题。  
+  * **好处：**快速提供多层面分析。
 
 3\. Multi-API or Tool Interaction:  
 Calling multiple independent APIs or tools to gather different types of information or perform different actions.
