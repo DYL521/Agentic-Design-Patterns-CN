@@ -77,7 +77,7 @@ Performing queries, updates, or other operations on structured data.
   * **工具：** 用于检查产品库存、获取订单状态或处理支付的API调用。
 
   * **Agent Flow:** User asks "Is product X in stock?", LLM calls the inventory API, tool returns stock count, LLM tells the user the stock status.
-  * **智能体流程：** 用户询问"产品X有库存吗？"，LLM调用库存API，工具返回库存数量，LLM告诉用户库存状态。
+  * **智能体流程：：** 用户询问"产品X有库存吗？"，LLM调用库存API，工具返回库存数量，LLM告诉用户库存状态。
 
 3\. Performing Calculations and Data Analysis:  
 3\. 执行计算和数据分析：
@@ -137,12 +137,16 @@ Let's approach this step by step:
         intermediate_steps = kwargs.pop("intermediate_steps")
         
         # Format the list of tools
-        tools_str = "\n".join([f"{tool.name}: {tool.description}" for tool in kwargs["tools"]])
+        tools_str = "
+".join([f"{tool.name}: {tool.description}" for tool in kwargs["tools"]])
         
         # Format the agent scratchpad
         thoughts = ""
         for action, observation in intermediate_steps:
-            thoughts += f"Action: {action.tool}\nAction Input: {action.tool_input}\nObservation: {observation}\n"
+            thoughts += f"Action: {action.tool}
+Action Input: {action.tool_input}
+Observation: {observation}
+"
         
         kwargs["agent_scratchpad"] = thoughts
         kwargs["tools"] = tools_str

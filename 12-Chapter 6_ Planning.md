@@ -459,7 +459,7 @@ This example showcases several sophisticated planning features:
 3. 需要跟踪和衡量进度
 
 4. Adaptation to feedback is important
-4. 对反馈的适应很重要
+4. 对反馈的适应很重要。
 
 # Key Takeaways
 # 关键要点
